@@ -12,7 +12,7 @@ import {
     BimfaceSDKLoader.load(options, successCallback, failureCallback);
   
     function successCallback(viewMetaData) {
-      if (viewMetaData.viewType == "3DView") {
+      if (viewMetaData) {
         let domShow = dom;
         let webAppConfig = new Glodon.Bimface.Application.WebApplication3DConfig();
         webAppConfig.domElement = domShow;

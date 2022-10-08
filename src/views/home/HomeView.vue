@@ -1,31 +1,33 @@
 <!--主页  -->
 <template>
     <div class='home'>
-            <el-row :gutter="20" class="homeNve">
-                <el-col :span="6" class="homeDeta">
-                    {{deta}}
-                </el-col>
-                <el-col :span="12" class="homeLabel">
-                    <h1>山区路基土石方施工管理系统</h1>
-                </el-col>
-                <el-col :span="6" style="text-align: center;">
-                    <el-button type="primary" @click="BackstageManagement">后台管理</el-button>
-                </el-col>
-            </el-row>
-            <el-row class="HomeContent">
+        <el-row :gutter="20" class="homeNve">
+            <el-col :span="6" class="homeDeta">
+                {{deta}}
+            </el-col>
+            <el-col :span="12" class="homeLabel">
+                <h1>山区路基土石方施工管理系统</h1>
+            </el-col>
+            <el-col :span="6" style="text-align: center;">
+                <el-button type="primary" @click="BackstageManagement">后台管理</el-button>
+            </el-col>
+        </el-row>
+        <el-row class="HomeContent">
+            <keep-alive>
                 <router-view></router-view>
-            </el-row>
+            </keep-alive>
+        </el-row>
     </div>
 </template>
 
 <script>
     //这里可以导入其他文件(比如：组件,工具js,第三方插件js,json文件,图片文件等等)
     //例如:import 《组件名称》 from '《组件路径》';
-  
+
     export default {
         //import引入的组件需要注入到对象中才能使用,注册组件
         components: {
-          
+
         },
         data() {
             //这里存放数据
@@ -56,7 +58,7 @@
                 this.deta = year + "年" + mon + "月" + date + "日" + " " + weeks[week];
             },
             //跳转到后台管理
-            BackstageManagement(){
+            BackstageManagement() {
                 this.$router.push('/BackstageManagement')
             }
         },
@@ -110,8 +112,8 @@
 
 
     }
-    .HomeContent{
+
+    .HomeContent {
         margin-top: 70px;
     }
-    
 </style>

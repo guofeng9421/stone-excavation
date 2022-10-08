@@ -10,13 +10,15 @@
                     <el-radio-button label="4">质量管理</el-radio-button>
                     <el-radio-button label="5">进度管理</el-radio-button>
                     <el-radio-button label="6">土方量算</el-radio-button>
-                    <!-- <el-radio-button label="7">施工资料</el-radio-button>
-                    <el-radio-button label="8">施工管理</el-radio-button>
-                    <el-radio-button label="9">施工成本</el-radio-button> -->
+                    <el-radio-button label="7">环境管理</el-radio-button>
+                    <el-radio-button label="8">监控管理</el-radio-button>
+                    <!-- <el-radio-button label="9">施工成本</el-radio-button> -->
                 </el-radio-group>
                 <el-col class="mt">
                     <template>
-                        <computed :is='moduie'></computed>
+                        <keep-alive>
+                            <computed :is='moduie'></computed>
+                        </keep-alive>
                     </template>
                 </el-col>
             </el-card>
@@ -34,8 +36,8 @@
     import myModuie4 from '@/views/home/Content/HomeModule/QualityManagement.vue';
     import myModuie5 from '@/views/home/Content/HomeModule/ViewDomed.vue';
     import myModuie6 from '@/views/home/Content/HomeModule/MeasurementModule.vue';
-    // import myModuie7 from '@/views/home/Content/HomeModule/ConstructionInformation.vue';
-    // import myModuie8 from '@/views/home/Content/HomeModule/ConstructionManagement.vue';
+    import myModuie7 from '@/views/home/Content/HomeModule/ConstructionInformation.vue';
+    import myModuie8 from '@/views/home/Content/HomeModule/ConstructionManagement.vue';
     // import myModuie9 from '@/views/home/Content/HomeModule/Construction-Cost.vue';
     export default {
         //import引入的组件需要注入到对象中才能使用,注册组件
@@ -46,8 +48,8 @@
             myModuie4,
             myModuie5,
             myModuie6,
-            // myModuie7,
-            // myModuie8,
+            myModuie7,
+            myModuie8,
             // myModuie9,
         },
         data() {

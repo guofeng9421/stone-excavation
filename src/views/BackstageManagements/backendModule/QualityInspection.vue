@@ -43,7 +43,8 @@
                     <el-table-column prop="date" label="巡检时间" width="120"></el-table-column>
                     <el-table-column fixed="right" label="操作" width="80">
                         <template slot-scope="scope">
-                            <el-button @click="handleClick(scope.row)" type="primary" size="small">{{operate}}</el-button>
+                            <el-button @click="handleClick(scope.row)" type="primary" size="small">{{state}}
+                            </el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -140,8 +141,8 @@
                             </el-form-item>
                             <el-form-item label="问题类型">
                                 <el-select v-model="AuditPopupForm.problemType" placeholder="请选择问题类型" class="question">
-                                    <el-option label="工程质量" value="1"></el-option>
-                                    <el-option label="其他" value="2"></el-option>
+                                    <el-option label="工程质量" value="工程质量"></el-option>
+                                    <el-option label="其他" value="其他"></el-option>
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="图片">
@@ -193,14 +194,14 @@
                     <el-col :span="12">
                         <el-form v-model="AuditResults" label-width="80px">
                             <el-form-item label="审核结果">
-                                <el-radio-group v-model="AuditResults.radio">
-                                    <el-radio :label="3">优秀</el-radio>
-                                    <el-radio :label="6">良好</el-radio>
-                                    <el-radio :label="9">不合格</el-radio>
+                                <el-radio-group v-model="AuditResults.examineResult">
+                                    <el-radio label="优秀"></el-radio>
+                                    <el-radio label="良好"></el-radio>
+                                    <el-radio label="不合格"></el-radio>
                                 </el-radio-group>
                             </el-form-item>
-                            <el-form-item label="巡检人">
-                                <el-input v-model="AuditResults.examineUser" placeholder="请输入巡检人"></el-input>
+                            <el-form-item label="审核人">
+                                <el-input v-model="AuditResults.examineUser" placeholder="请输入审核人"></el-input>
                             </el-form-item>
                             <el-form-item label="巡检时间">
                                 <el-date-picker v-model="AuditResults.examineDate" type="date" placeholder="请选择日期"
@@ -215,7 +216,7 @@
                                 <el-input v-model="AuditResults.examineDescribe" placeholder="请输入描述结果"></el-input>
                             </el-form-item>
                             <el-form-item label="联系电话">
-                                <el-input v-model="AuditResults.ContactNumber" placeholder="请输入联系电话"></el-input>
+                                <el-input v-model="AuditResults.examineTel" placeholder="请输入联系电话"></el-input>
                             </el-form-item>
                         </el-form>
                     </el-col>
@@ -240,12 +241,13 @@
         findQualityInspect,
     } from '@/api/api';
     export default {
+        inject: ['reload'],
         //import引入的组件需要注入到对象中才能使用,注册组件
         components: {},
         data() {
             //这里存放数据
             return {
-                operate:'',
+                state: '审核',
                 //查询表单
                 formInline: {
                     code: ''
@@ -271,7 +273,7 @@
                     date: '',
                     checkUser: '',
                 },
-                //审核
+                //审核弹窗当前的值
                 AuditPopupForm: {
                     code: '',
                     area: '',
@@ -294,9 +296,9 @@
                 baseUrl: process.env.BASE_URL,
                 //审核结果
                 AuditResults: {
-                    radio: '',
+                    examineResult: '',
                     examineDescribe: '',
-                    ContactNumber: '',
+                    examineTel: '',
                     examineUser: '',
                     examineDate: '',
                 }
@@ -316,23 +318,25 @@
             onSubmit() {
                 console.log(this.formInline.code);
                 findQualityInspect({
-                    code:this.formInline.code,
-                    type1:'质量'
-                }).then(res=>{
-                    this.tableData=res.data.data
+                    code: this.formInline.code,
+                    type1: '质量'
+                }).then(res => {
+                    this.tableData = res.data.data
                 })
             },
             //重置事件
-            reset(){
-                this.formInline.code='';
+            reset() {
+                this.formInline.code = '';
                 this.table();
             },
             //审核事件弹窗当前行的数据赋值
             handleClick(row) {
-                    this.AuditPopup = true;
-                    this.AuditPopupForm = row;
-                    this.localImage = row.checkPicture;
-                    this.AuditResults=row
+                console.log(row);
+                this.AuditPopup = true;
+                this.AuditPopupForm = row;
+                this.localImage = row.checkPicture;
+                this.AuditResults=row
+
             },
             //添加事件
             AddTo() {
@@ -415,7 +419,8 @@
                     checkFile: this.form.checkFile,
                     date: this.form.date,
                     checkUser: this.form.checkUser,
-                    type1:'质量',
+                    type1: '质量',
+                    state: '审核',
                 }
                 // inserted().then(res=>{
                 //     console.log(res);
@@ -436,6 +441,7 @@
                         });
                         this.form = {}
                         this.dialogVisible = false;
+                        this.reload()
                     } else {
                         this.$message.error('提交错误')
                     }
@@ -447,52 +453,48 @@
                 findForm().then(res => {
                     if (res.status == 200) {
                         this.tableData = res.data.data;
-                        console.log(res.data.data);
-                        const dataa=res.data.data;
-                        for(let i=0; i<dataa.length;i++){
-                            console.log(dataa[i].examineResult);
-                            if(dataa[i].examineResult==='9'|| null){
-                                this.operate='整改'
-                            }else{
-                                this.operate='审核'
-                            }
+                        const dataa = res.data.data;
+                        for (let i = 0; i < dataa.length; i++) {
+                            this.state=dataa[i].state
                         }
                     }
                 });
             },
             //审核提交
             ReviewOK() {
+                if( this.AuditResults.examineResult!=='不合格'){
+                   this.state='已完成'
+                }else{
+                    this.state='整改'
+                }
                 let data = {
-                    code: this.form.code,
-                    examineUser: this.form.examineUser,
-                    type1:'质量',
-                    state:'',
-                    examineDate:this.AuditResults.examineDate ,
-                    examineDescribe:this.AuditResults.examineDescribe,
-                    examineTel:this.AuditResults.ContactNumber,
-                    examineResult:this.AuditResults.radio
-                    }
-                    console.log(data);
-                // inserted().then(res=>{
-                //     console.log(res);
-                // })
+                    code: this.AuditPopupForm.code,
+                    examineUser: this.AuditPopupForm.examineUser,
+                    type1: '质量',
+                    state: this.state,
+                    examineDate: this.AuditResults.examineDate,
+                    examineDescribe: this.AuditResults.examineDescribe,
+                    examineTel: this.AuditResults.examineTel,
+                    examineResult: this.AuditResults.examineResult
+                }
+            
                 // let url = this.AuditResults.radio=='9'?"http://192.168.1.19:8015/Quality/updateRectificate":"http://192.168.1.19:8015/Quality/updateQualityInspect"
                 this.service({
-                    url:"http://192.168.1.19:8015/Quality/updateQualityInspect",
+                    url: "http://192.168.1.19:8015/Quality/updateQualityInspect",
                     method: 'post',
                     headers: {
                         'Content-Type': 'application/json;charset=UTF-8'
                     },
                     data: JSON.stringify(data),
                 }).then(res => {
-                    console.log(res);
                     if (res.data) {
                         this.$message({
                             type: "success",
                             message: '提交成功',
                         });
-                        data= {}
-                        this.dialogVisible = false;
+                        data = {}
+                        this.AuditPopup = false;
+                        this.reload();
                     } else {
                         this.$message.error('提交错误')
                     }

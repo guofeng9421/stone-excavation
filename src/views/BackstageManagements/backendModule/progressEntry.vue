@@ -30,7 +30,7 @@
                     </el-col>
                 </el-row>
                 <el-form :model="EntryForm" class="mt">
-                    <el-form-item label="状态" :label-width="formLabelWidth">
+                    <el-form-item label="状态" :label-width="formLabelWidth" >
                         <el-select v-model="EntryForm.state" placeholder="请选择状态" class="select">
                             <el-option label="超前完成" value="0"></el-option>
                             <el-option label="预期完成" value="1"></el-option>
@@ -79,7 +79,7 @@
                     workArea: '桓集高速竣工后',
                 },
                 dialogFormVisible: false,
-                formLabelWidth: '115px',
+                formLabelWidth: '150px',
                 arr: [],
             };
         },

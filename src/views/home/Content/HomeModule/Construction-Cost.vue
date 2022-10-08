@@ -1,12 +1,7 @@
-<!--二三维同步 -->
+<!-- -->
 <template>
     <div class=''>
-        <el-row class="mb">
-            <el-card>
-                <div class="GISmap" ref="GISmap "></div>
-            </el-card>
-        </el-row>
-    </div>
+       
 </template>
 
 <script>

@@ -37,11 +37,9 @@
         methods: {
             BIMCreate() {
                 queryName().then(res=>{
-                    console.log(res);
                 const viewToken=res.data.modelId.data;
                  Create(this.$refs["planBIM"], viewToken)
                 })
-               
             }
         },
         //生命周期 - 创建完成(可以访问当前this实例)

@@ -11,7 +11,7 @@
                     </el-col>
                     <el-col :span="10">
                         <!-- 计划 -->
-                        <div class=" mt mb BIM">施工前工</div>
+                        <div class=" mt mb BIM">施工前</div>
                         <div class="bim-collaboration" ref="actualBIM"></div>
                     </el-col>
                     <el-col :span="4">
